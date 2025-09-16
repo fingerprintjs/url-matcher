@@ -1,0 +1,7 @@
+[
+  {
+    "url": "https://fingerprint.com",
+    "pattern": "fingerprint.com",
+    "expected": true
+  }
+]
