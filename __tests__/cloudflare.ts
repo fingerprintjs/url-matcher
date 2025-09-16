@@ -10,7 +10,7 @@ export function cloudflareMatchUrl(urlString: string, patterns: string[]) {
     const match = matchRoutes(routes, url)
     return match === 'test-worker'
   } catch (error) {
-    console.warn('Cloudflare matcher error:', error)
-    return false
+    console.error('Cloudflare matcher error:', error)
+    throw error
   }
 }
