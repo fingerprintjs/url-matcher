@@ -1,10 +1,29 @@
 import * as testCases from './testCases.json'
-import { matchUrl } from '../src'
+import { cloudflareMatchUrl } from './cloudflare'
+import { matchPatterns } from '../src'
 
 describe('Matcher', () => {
-  testCases.forEach((testCase) => {
-    it(`Match for ${testCase.url} with ${testCase.pattern} should be ${testCase.expected ? 'matched' : 'not matched'}`, () => {
-      expect(matchUrl(new URL(testCase.url), [testCase.pattern])).toBe(testCase.expected)
+  it('should throw for a inflix wildcard', () => {
+    expect(() =>
+      matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))
+    ).toThrow('Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.')
+  })
+
+  testCases.forEach((testCase, index) => {
+    // Add "only: true" to a specific test case to isolate it
+    const test = testCase.only ? it.only : it
+
+    describe(`#${index + 1} Match for ${testCase.url} with ${testCase.patterns.join(',')}`, () => {
+      test(`should be ${testCase.expected ? 'matched' : 'not matched'}`, () => {
+        expect(matchPatterns(testCase.patterns, new URL(testCase.url))).toBe(testCase.expected)
+      })
+
+      test('should match Cloudflare implementation', () => {
+        const ourMatchResult = matchPatterns(testCase.patterns, new URL(testCase.url))
+        const cloudflareMatchResult = cloudflareMatchUrl(testCase.url, testCase.patterns)
+
+        expect(ourMatchResult).toBe(cloudflareMatchResult)
+      })
     })
   })
 })
