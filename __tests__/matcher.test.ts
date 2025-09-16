@@ -3,6 +3,7 @@ import { cloudflareMatchUrl } from './cloudflare'
 import { matchPatterns } from '../src'
 
 describe('Matcher', () => {
+  // Based on miniflare behaviour
   it('should throw for a inflix wildcard', () => {
     expect(() =>
       matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))

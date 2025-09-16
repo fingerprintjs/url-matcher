@@ -1,5 +1,12 @@
 import { Route } from './types'
 
+/**
+ * Parses a list of route strings into an array of Route objects that contain detailed route information.
+ *
+ * @param {string[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
+ * @return {Route[]} An array of parsed Route objects with details such as hostname, path, and protocol.
+ * @throws {Error} If a route contains a query string or infix wildcard which is not allowed.
+ */
 export function parseRoutes(allRoutes: string[]): Route[] {
   const routes: Route[] = []
 
