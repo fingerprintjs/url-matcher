@@ -18,11 +18,11 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
       if (url.hostname !== route.hostname) continue
     }
 
-    const path = url.pathname + url.search
+    const fullPath = url.pathname + url.search
     if (route.allowPathSuffix) {
-      if (!path.startsWith(route.path)) continue
+      if (!fullPath.startsWith(route.path)) continue
     } else {
-      if (path !== route.path) continue
+      if (fullPath !== route.path) continue
     }
 
     return true

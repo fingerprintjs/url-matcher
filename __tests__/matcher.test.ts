@@ -4,7 +4,7 @@ import { matchPatterns } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
-  it('should throw for a inflix wildcard', () => {
+  it('should throw for an infix wildcard', () => {
     expect(() =>
       matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))
     ).toThrow('Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.')
