@@ -213,5 +213,47 @@
       "fingerprint.com.evil.com/page"
     ],
     "expected": false
+  },
+  {
+    "url": "https://glöd.se",
+    "patterns": [
+      "glöd.se/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se/"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://español.com",
+    "patterns": [
+      "xn--espaol-zwa.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://xn--espaol-zwa.com",
+    "patterns": [
+      "español.com"
+    ],
+    "expected": true
   }
 ]

@@ -1,4 +1,3 @@
-import { domainToUnicode, URL } from 'url'
 import { Route } from './types'
 
 export function parseRoutes(allRoutes: string[]): Route[] {
@@ -14,17 +13,11 @@ export function parseRoutes(allRoutes: string[]): Route[] {
 
     const protocol = hasProtocol ? url.protocol : undefined
 
-    const internationalisedAllowHostnamePrefix = url.hostname.startsWith('xn--*')
-    const allowHostnamePrefix = url.hostname.startsWith('*') || internationalisedAllowHostnamePrefix
+    const allowHostnamePrefix = url.hostname.startsWith('*')
     const anyHostname = url.hostname === '*'
     if (allowHostnamePrefix && !anyHostname) {
-      let hostname = url.hostname
-      // If hostname is internationalised (e.g. `xn--gld-tna.se`), decode it
-      if (internationalisedAllowHostnamePrefix) {
-        hostname = domainToUnicode(hostname)
-      }
       // Remove leading "*"
-      url.hostname = hostname.substring(1)
+      url.hostname = url.hostname.substring(1)
     }
 
     const allowPathSuffix = url.pathname.endsWith('*')
