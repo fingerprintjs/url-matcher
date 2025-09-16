@@ -8,12 +8,12 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://github.com/fingerprintjs/library-template-typescript/actions/workflows/build.yml"><img src="https://github.com/fingerprintjs/library-template-typescript/actions/workflows/build.yml/badge.svg" alt="Build status"></a>
-  <a href="https://fingerprintjs.github.io/library-template-typescript/coverage/"><img src="https://fingerprintjs.github.io/library-template-typescript/coverage/badges.svg" alt="coverage"></a>
-  <a href="https://github.com/fingerprintjs/library-template-typescript/actions/workflows/release.yml"><img src="https://github.com/fingerprintjs/library-template-typescript/actions/workflows/release.yml/badge.svg" alt="Release status"></a>
+  <a href="https://github.com/fingerprintjs/url-matcher/actions/workflows/build.yml"><img src="https://github.com/fingerprintjs/url-matcher/actions/workflows/build.yml/badge.svg" alt="Build status"></a>
+  <a href="https://fingerprintjs.github.io/url-matcher/coverage/"><img src="https://fingerprintjs.github.io/url-matcher/coverage/badges.svg" alt="coverage"></a>
+  <a href="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml"><img src="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml/badge.svg" alt="Release status"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/:license-mit-blue.svg" alt="MIT license"></a>
   <a href="https://discord.gg/39EpE2neBg"><img src="https://img.shields.io/discord/852099967190433792?style=logo&label=Discord&logo=Discord&logoColor=white" alt="Discord server"></a>
-  <a href="https://fingerprintjs.github.io/library-template-typescript/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
+  <a href="https://fingerprintjs.github.io/url-matcher/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
 </p>
 This is template repository for creating TypeScript libraries by FingerprintJS team.
 
@@ -54,7 +54,7 @@ For unit tests, we use jest, because of the good infrastructure, flexible instru
 
 This repository contains example of how to configure code coverage reporting without SaaS solutions like codecov
 (such solutions require token with full access to the repository).
-In [PR#13](https://github.com/fingerprintjs/library-template-typescript/pull/13) you can find what you need to configure:
+In [PR#13](https://github.com/fingerprintjs/url-matcher/pull/13) you can find what you need to configure:
 - workflow to update the coverage badge in the readme and publish a full report for the main branch
 - workflow to add a comment to pr with coverage of the current branch and diff with main
 
