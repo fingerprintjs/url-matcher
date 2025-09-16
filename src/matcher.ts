@@ -10,19 +10,29 @@ import { parseRoutes } from './parser'
  */
 export function matchRoutes(routes: Route[], url: URL): boolean {
   for (const route of routes) {
-    if (route.protocol && route.protocol !== url.protocol) continue
+    if (route.protocol && route.protocol !== url.protocol) {
+      continue
+    }
 
     if (route.allowHostnamePrefix) {
-      if (!url.hostname.endsWith(route.hostname)) continue
+      if (!url.hostname.endsWith(route.hostname)) {
+        continue
+      }
     } else {
-      if (url.hostname !== route.hostname) continue
+      if (url.hostname !== route.hostname) {
+        continue
+      }
     }
 
     const fullPath = url.pathname + url.search
     if (route.allowPathSuffix) {
-      if (!fullPath.startsWith(route.path)) continue
+      if (!fullPath.startsWith(route.path)) {
+        continue
+      }
     } else {
-      if (fullPath !== route.path) continue
+      if (fullPath !== route.path) {
+        continue
+      }
     }
 
     return true

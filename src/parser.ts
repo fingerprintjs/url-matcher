@@ -15,7 +15,9 @@ export function parseRoutes(allRoutes: string[]): Route[] {
 
     let urlInput = route
     // If route is missing a protocol, give it one so it parses
-    if (!hasProtocol) urlInput = `https://${urlInput}`
+    if (!hasProtocol) {
+      urlInput = `https://${urlInput}`
+    }
     const url = new URL(urlInput)
 
     const protocol = hasProtocol ? url.protocol : undefined
