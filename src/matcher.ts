@@ -24,13 +24,13 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
       }
     }
 
-    const fullPath = url.pathname + url.search
+    const pathWithQuery = url.pathname + url.search
     if (route.wildcardPathSuffix) {
-      if (!fullPath.startsWith(route.path)) {
+      if (!pathWithQuery.startsWith(route.path)) {
         continue
       }
     } else {
-      if (fullPath !== route.path) {
+      if (pathWithQuery !== route.path) {
         continue
       }
     }
