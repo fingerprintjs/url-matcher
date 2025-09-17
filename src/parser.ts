@@ -1,4 +1,7 @@
 import { Route } from './types'
+import { SUPPORTED_PROTOCOLS } from './const'
+import { InvalidProtocolError } from './errors'
+import { stripEnd } from './utils'
 
 /**
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
@@ -21,6 +24,9 @@ export function parseRoutes(allRoutes: string[]): Route[] {
     const url = new URL(urlInput)
 
     const protocol = hasProtocol ? url.protocol : undefined
+    if (protocol && !SUPPORTED_PROTOCOLS.includes(protocol)) {
+      throw new InvalidProtocolError(stripEnd(protocol))
+    }
 
     const allowHostnamePrefix = url.hostname.startsWith('*')
     const anyHostname = url.hostname === '*'

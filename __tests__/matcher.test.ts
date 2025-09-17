@@ -1,6 +1,6 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { matchPatterns } from '../src'
+import { InvalidProtocolError, matchPatterns } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
@@ -8,6 +8,12 @@ describe('Matcher', () => {
     expect(() =>
       matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))
     ).toThrow('Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.')
+  })
+
+  it.each(['ws', 'ftp'])('should throw for invalid protocol: %s', (protocol) => {
+    expect(() => matchPatterns([`${protocol}://example.com`], new URL('https://example.com'))).toThrow(
+      new InvalidProtocolError(protocol)
+    )
   })
 
   testCases.forEach((testCase, index) => {

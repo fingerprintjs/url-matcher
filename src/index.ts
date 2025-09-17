@@ -1,3 +1,5 @@
 export * from './matcher'
 export * from './types'
 export * from './parser'
+export * from './errors'
+export * from './const'
