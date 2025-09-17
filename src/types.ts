@@ -1,5 +1,18 @@
 export type Route = {
   /**
+   * The original route string that was parsed to create this Route object.
+   * Contains the full route pattern as originally provided, including any protocols, wildcards, hostnames, and paths.
+   * Used for reference and sorting when routes have equal specificity.
+   */
+
+  route: string
+
+  /**
+   * Extracted target if `RouteParam` was provided.
+   * */
+  target?: string
+
+  /**
    * The protocol part of the route. Can be either `https:` or `http`.
    * If undefined, the route matches any protocol.
    */
@@ -11,6 +24,15 @@ export type Route = {
    * For example, if hostname is "example.com" and this is true, it matches "sub.example.com".
    */
   wildcardHostnamePrefix: boolean
+
+  /**
+   * A numeric value representing how specific this route is for matching purposes.
+   * Higher values indicate more specific routes. Calculated as (hostScore * 26 + pathScore)
+   * where hostScore is the number of hostname parts (subdomains) and pathScore is the number of path segments.
+   * Wildcard prefixes in hostname and wildcard suffixes in path reduce their respective scores by 2.
+   * Used for sorting routes so more specific routes are matched first.
+   */
+  specificity?: number
 
   /**
    * The hostname part of the route to match against.
@@ -30,3 +52,10 @@ export type Route = {
    */
   wildcardPathSuffix: boolean
 }
+
+export type RouteParam = {
+  url: string
+  target: string
+}
+
+export type RawRoute = RouteParam | string

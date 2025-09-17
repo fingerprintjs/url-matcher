@@ -7,9 +7,9 @@ import { validateProtocol } from './validation'
  *
  * @param {Route[]} routes - Array of route objects that define the matching criteria such as protocol, hostname, and path.
  * @param {URL} url - The URL to be matched against the provided routes.
- * @return {boolean} Returns true if a route matches the given URL, otherwise returns false.
+ * @return {Route | undefined} Returns matched route, or undefined if no match is found.
  */
-export function matchRoutes(routes: Route[], url: URL): boolean {
+export function matchRoutes(routes: Route[], url: URL): Route | undefined {
   for (const route of routes) {
     if (route.protocol && route.protocol !== url.protocol) {
       continue
@@ -36,10 +36,10 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
       }
     }
 
-    return true
+    return route
   }
 
-  return false
+  return undefined
 }
 
 /**
@@ -56,5 +56,5 @@ export function matchPatterns(patterns: string[], url: URL): boolean {
   validateProtocol(url.protocol)
   const parsedRoutes = parseRoutes(patterns)
 
-  return matchRoutes(parsedRoutes, url)
+  return Boolean(matchRoutes(parsedRoutes, url))
 }

@@ -1,6 +1,6 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { InvalidPatternError, InvalidProtocolError, matchPatterns } from '../src'
+import { InvalidPatternError, InvalidProtocolError, matchPatterns, parseRoutes, matchRoutes } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
@@ -36,6 +36,45 @@ describe('Matcher', () => {
     expect(() => matchPatterns([`https://example.com`], new URL(`${protocol}://example.com`))).toThrow(
       new InvalidProtocolError(protocol)
     )
+  })
+
+  it('should return target to matched route if it was set', () => {
+    const routes = parseRoutes([
+      {
+        url: 'https://example.com/blog/*',
+        target: 'blog',
+      },
+      {
+        url: 'https://fingerprint.com',
+        target: 'fingerprint',
+      },
+      'https://google.com',
+    ])
+
+    const matchedRoute = matchRoutes(routes, new URL('https://example.com/blog/post123'))
+
+    expect(matchedRoute?.target).toBe('blog')
+  })
+
+  it('should return target to matched route if it was set respecting specificity', () => {
+    const routes = parseRoutes(
+      [
+        {
+          url: 'https://example.com/blog/*',
+          target: 'blog',
+        },
+        'https://google.com',
+        {
+          url: 'https://example.com/blog/post123',
+          target: 'specific-blog',
+        },
+      ],
+      true
+    )
+
+    const matchedRoute = matchRoutes(routes, new URL('https://example.com/blog/post123'))
+
+    expect(matchedRoute?.target).toBe('specific-blog')
   })
 
   testCases.forEach((testCase, index) => {
