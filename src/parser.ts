@@ -37,6 +37,7 @@ export function parseRoutes(allRoutes: string[]): Route[] {
 
     const allowPathSuffix = url.pathname.endsWith('*')
     if (allowPathSuffix) {
+      // Remove trailing "*"
       url.pathname = url.pathname.substring(0, url.pathname.length - 1)
     }
 
