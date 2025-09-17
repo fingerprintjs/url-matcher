@@ -14,7 +14,7 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
       continue
     }
 
-    if (route.allowHostnamePrefix) {
+    if (route.wildcardHostnamePrefix) {
       if (!url.hostname.endsWith(route.hostname)) {
         continue
       }
@@ -25,7 +25,7 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
     }
 
     const fullPath = url.pathname + url.search
-    if (route.allowPathSuffix) {
+    if (route.wildcardPathSuffix) {
       if (!fullPath.startsWith(route.path)) {
         continue
       }

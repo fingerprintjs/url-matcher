@@ -42,13 +42,11 @@ export function parseRoutes(allRoutes: string[]): Route[] {
     }
 
     routes.push({
-      route,
-
       protocol,
-      allowHostnamePrefix,
+      wildcardHostnamePrefix: allowHostnamePrefix,
       hostname: anyHostname ? '' : url.hostname,
       path: url.pathname,
-      allowPathSuffix,
+      wildcardPathSuffix: allowPathSuffix,
     })
   }
 
