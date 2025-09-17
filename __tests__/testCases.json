@@ -8,6 +8,27 @@
     "only": false
   },
   {
+    "url": "https://fingerprint.com",
+    "patterns": [
+      "http://fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "http://fingerprint.com",
+    "patterns": [
+      "http://fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "wss://example.com",
+    "patterns": [
+      "example.com/*"
+    ],
+    "expected": true
+  },
+  {
     "url": "http://fingerprint.com",
     "patterns": [
       "fingerprint.com"
