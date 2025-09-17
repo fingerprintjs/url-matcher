@@ -47,7 +47,9 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
  *
  * @param {string[]} patterns - An array of string patterns that define the routes to match against.
  * @param {URL} url - The URL object that needs to be tested against the patterns.
+ *
  * @throws {InvalidProtocolError} If provided URL protocol is not `http:` or `https:`.
+ * @throws {InvalidPatternError} If one of the provided patterns contains a query string or infix wildcard.
  * @return {boolean} Returns true if the URL matches any of the given patterns; otherwise, returns false.
  */
 export function matchPatterns(patterns: string[], url: URL): boolean {

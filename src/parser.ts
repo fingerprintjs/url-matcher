@@ -1,12 +1,15 @@
 import { Route } from './types'
 import { validateProtocol } from './validation'
+import { InvalidPatternError } from './errors'
 
 /**
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
  *
  * @param {string[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
  * @return {Route[]} An array of parsed Route objects with details such as hostname, path, and protocol.
- * @throws {Error} If a route contains a query string or infix wildcard which is not allowed.
+ *
+ * @throws {InvalidProtocolError} If provided URL protocol in one of the routes is not `http:` or `https:`.
+ * @throws {InvalidPatternError} If a route contains a query string or infix wildcard which is not allowed.
  */
 export function parseRoutes(allRoutes: string[]): Route[] {
   const routes: Route[] = []
@@ -40,10 +43,16 @@ export function parseRoutes(allRoutes: string[]): Route[] {
     }
 
     if (url.search) {
-      throw new Error(`Route "${route}" contains a query string. This is not allowed.`)
+      throw new InvalidPatternError(
+        `Route "${route}" contains a query string. This is not allowed.`,
+        'ERR_QUERY_STRING'
+      )
     }
     if (url.toString().includes('*') && !anyHostname) {
-      throw new Error(`Route "${route}" contains an infix wildcard. This is not allowed.`)
+      throw new InvalidPatternError(
+        `Route "${route}" contains an infix wildcard. This is not allowed.`,
+        'ERR_INFIX_WILDCARD'
+      )
     }
 
     routes.push({

@@ -1,13 +1,29 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { InvalidProtocolError, matchPatterns } from '../src'
+import { InvalidPatternError, InvalidProtocolError, matchPatterns } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
   it('should throw for an infix wildcard', () => {
     expect(() =>
       matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))
-    ).toThrow('Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.')
+    ).toThrow(
+      new InvalidPatternError(
+        'Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.',
+        'ERR_INFIX_WILDCARD'
+      )
+    )
+  })
+
+  it('should throw if pattern contains query string', () => {
+    expect(() =>
+      matchPatterns(['fingerprint.com/blog/post123?q=test'], new URL('https://example.com/blog/2025/post-1'))
+    ).toThrow(
+      new InvalidPatternError(
+        'Route "fingerprint.com/blog/post123?q=test" contains a query string. This is not allowed.',
+        'ERR_QUERY_STRING'
+      )
+    )
   })
 
   it.each(['ws', 'ftp'])('should throw for invalid protocol passed in patterns: %s', (protocol) => {
