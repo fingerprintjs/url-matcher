@@ -22,13 +22,6 @@
     "expected": true
   },
   {
-    "url": "wss://example.com",
-    "patterns": [
-      "example.com/*"
-    ],
-    "expected": true
-  },
-  {
     "url": "http://fingerprint.com",
     "patterns": [
       "fingerprint.com"

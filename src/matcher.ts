@@ -1,5 +1,6 @@
 import { Route } from './types'
 import { parseRoutes } from './parser'
+import { validateProtocol } from './validation'
 
 /**
  * Matches a list of routes against a given URL to determine if a match is found.
@@ -49,6 +50,7 @@ export function matchRoutes(routes: Route[], url: URL): boolean {
  * @return {boolean} Returns true if the URL matches any of the given patterns; otherwise, returns false.
  */
 export function matchPatterns(patterns: string[], url: URL): boolean {
+  validateProtocol(url.protocol)
   const parsedRoutes = parseRoutes(patterns)
 
   return matchRoutes(parsedRoutes, url)

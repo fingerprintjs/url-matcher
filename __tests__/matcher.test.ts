@@ -10,8 +10,14 @@ describe('Matcher', () => {
     ).toThrow('Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.')
   })
 
-  it.each(['ws', 'ftp'])('should throw for invalid protocol: %s', (protocol) => {
+  it.each(['ws', 'ftp'])('should throw for invalid protocol passed in patterns: %s', (protocol) => {
     expect(() => matchPatterns([`${protocol}://example.com`], new URL('https://example.com'))).toThrow(
+      new InvalidProtocolError(protocol)
+    )
+  })
+
+  it.each(['ws', 'ftp'])('should throw for invalid protocol passed in URL: %s', (protocol) => {
+    expect(() => matchPatterns([`https://example.com`], new URL(`${protocol}://example.com`))).toThrow(
       new InvalidProtocolError(protocol)
     )
   })
