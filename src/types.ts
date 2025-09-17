@@ -1,6 +1,6 @@
 export type Route = {
   /**
-   * The protocol part of the route (e.g., 'https:', 'http:').
+   * The protocol part of the route. Can be either `https:` or `http`.
    * If undefined, the route matches any protocol.
    */
   protocol?: string
