@@ -80,3 +80,12 @@ export type RouteParam<Target extends string = string> = {
 }
 
 export type RawRoute<Target extends string = string> = RouteParam<Target> | string
+
+export type ParseRoutesOptions = {
+  /**
+   * Whether to sort the parsed routes by specificity.
+   * If true, the routes will be sorted by specificity, with the highest specificity first.
+   *
+   */
+  sortBySpecificity?: boolean
+}

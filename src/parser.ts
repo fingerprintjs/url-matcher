@@ -1,4 +1,4 @@
-import { RawRoute, Route } from './types'
+import { ParseRoutesOptions, RawRoute, Route } from './types'
 import { validateProtocol } from './validation'
 import { InvalidPatternError } from './errors'
 
@@ -24,7 +24,7 @@ function routeSpecificity(url: URL) {
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
  *
  * @param {RawRoute[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
- * @param {boolean} withSpecificity - Optional parameter to include specificity in the parsed routes. If set to true, the routes will be sorted by specificity.
+ * @param {ParseRoutesOptions} options - Optional options.
  * @return {Route[]} An array of parsed Route objects with details such as hostname, path, and protocol.
  *
  * @throws {InvalidProtocolError} If provided URL protocol in one of the routes is not `http:` or `https:`.
@@ -32,7 +32,7 @@ function routeSpecificity(url: URL) {
  */
 export function parseRoutes<Target extends string = string>(
   allRoutes: RawRoute<Target>[],
-  withSpecificity: boolean = false
+  { sortBySpecificity = false }: ParseRoutesOptions = {}
 ): Route<Target>[] {
   const routes: Route<Target>[] = []
 
@@ -53,7 +53,7 @@ export function parseRoutes<Target extends string = string>(
       validateProtocol(protocol)
     }
 
-    const specificity = withSpecificity ? routeSpecificity(url) : undefined
+    const specificity = sortBySpecificity ? routeSpecificity(url) : undefined
 
     const allowHostnamePrefix = url.hostname.startsWith('*')
     const anyHostname = url.hostname === '*'
@@ -93,7 +93,7 @@ export function parseRoutes<Target extends string = string>(
     })
   }
 
-  if (withSpecificity) {
+  if (sortBySpecificity) {
     // Sort with the highest specificity first
     routes.sort((a, b) => {
       if (a.specificity === b.specificity) {

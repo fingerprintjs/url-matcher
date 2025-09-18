@@ -69,7 +69,7 @@ describe('Matcher', () => {
           target: 'specific-blog',
         },
       ] as const,
-      true
+      { sortBySpecificity: true }
     )
 
     const matchedRoute = matchRoutes(routes, new URL('https://example.com/blog/post123'))
