@@ -9,7 +9,10 @@ import { validateProtocol } from './validation'
  * @param {URL} url - The URL to be matched against the provided routes.
  * @return {Route | undefined} Returns matched route, or undefined if no match is found.
  */
-export function matchRoutes(routes: Route[], url: URL): Route | undefined {
+export function matchRoutes<Target extends string = string>(
+  routes: Route<Target>[],
+  url: URL
+): Route<Target> | undefined {
   for (const route of routes) {
     if (route.protocol && route.protocol !== url.protocol) {
       continue

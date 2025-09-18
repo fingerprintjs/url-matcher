@@ -1,4 +1,4 @@
-export type Route = {
+export type Route<Target extends string = string> = {
   /**
    * The original route string that was parsed to create this Route object.
    * Contains the full route pattern as originally provided, including any protocols, wildcards, hostnames, and paths.
@@ -9,8 +9,29 @@ export type Route = {
 
   /**
    * Extracted target if `RouteParam` was provided.
+   *
+   * @example
+   * ```typescript
+   *
+   * // Routes with target "identification"
+   * const identificationPages = ["..."].map((page) => ({ url: page, target: "identification" }))
+   * // Routes with target "protection"
+   * const pagesToProtect = ["..."].map((page) => ({ url: page, target: "protection" }))
+   *
+   * const parsedRoutes = parseRoutes([...identificationPages, ...pagesToProtect], true)
+   * const matchedRoute = matchRoutes(parsedRoutes, new URL('<PAGE_URL>'))
+   *
+   * // "target" can be either "identification" or "protection"
+   * switch (matchedRoute?.target) {
+   *     case "identification":
+   *        // Handle identification
+   *
+   *     case "protection":
+   *        // Handle protection
+   * }
+   * ```
    * */
-  target?: string
+  target?: Target
 
   /**
    * The protocol part of the route. Can be either `https:` or `http`.
@@ -53,9 +74,9 @@ export type Route = {
   wildcardPathSuffix: boolean
 }
 
-export type RouteParam = {
+export type RouteParam<Target extends string = string> = {
   url: string
-  target: string
+  target: Target
 }
 
-export type RawRoute = RouteParam | string
+export type RawRoute<Target extends string = string> = RouteParam<Target> | string

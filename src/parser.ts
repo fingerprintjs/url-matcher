@@ -30,8 +30,11 @@ function routeSpecificity(url: URL) {
  * @throws {InvalidProtocolError} If provided URL protocol in one of the routes is not `http:` or `https:`.
  * @throws {InvalidPatternError} If a route contains a query string or infix wildcard which is not allowed.
  */
-export function parseRoutes(allRoutes: RawRoute[], withSpecificity: boolean = false): Route[] {
-  const routes: Route[] = []
+export function parseRoutes<Target extends string = string>(
+  allRoutes: RawRoute<Target>[],
+  withSpecificity: boolean = false
+): Route<Target>[] {
+  const routes: Route<Target>[] = []
 
   for (const rawRoute of allRoutes) {
     const route = typeof rawRoute === 'string' ? rawRoute : rawRoute.url

@@ -68,7 +68,7 @@ describe('Matcher', () => {
           url: 'https://example.com/blog/post123',
           target: 'specific-blog',
         },
-      ],
+      ] as const,
       true
     )
 
