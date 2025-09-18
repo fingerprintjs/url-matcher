@@ -16,6 +16,7 @@ function routeSpecificity(url: URL) {
     pathScore -= 2
   }
 
+  // The magic 26 comes directly from the cloudflare algorithm from workers-sdk
   return hostScore * 26 + pathScore
 }
 
