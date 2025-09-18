@@ -23,7 +23,7 @@ function routeSpecificity(url: URL) {
 /**
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
  *
- * @param {string[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
+ * @param {RawRoute[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
  * @param {boolean} withSpecificity - Optional parameter to include specificity in the parsed routes. If set to true, the routes will be sorted by specificity.
  * @return {Route[]} An array of parsed Route objects with details such as hostname, path, and protocol.
  *
