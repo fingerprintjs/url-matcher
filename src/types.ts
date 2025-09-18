@@ -1,3 +1,5 @@
+export type Protocol = 'http:' | 'https:'
+
 export type Route<Target extends string = string> = {
   /**
    * The original route string that was parsed to create this Route object.
@@ -37,7 +39,7 @@ export type Route<Target extends string = string> = {
    * The protocol part of the route. Can be either `https:` or `http`.
    * If undefined, the route matches any protocol.
    */
-  protocol?: string
+  protocol?: Protocol
 
   /**
    * Whether the hostname allows wildcard prefix matching.

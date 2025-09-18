@@ -1,4 +1,4 @@
-import { ParseRoutesOptions, RawRoute, Route } from './types'
+import { ParseRoutesOptions, Protocol, RawRoute, Route } from './types'
 import { validateProtocol } from './validation'
 import { InvalidPatternError } from './errors'
 
@@ -85,7 +85,7 @@ export function parseRoutes<Target extends string = string>(
       route,
       target,
       specificity,
-      protocol,
+      protocol: protocol as Protocol,
       wildcardHostnamePrefix: allowHostnamePrefix,
       hostname: anyHostname ? '' : url.hostname,
       path: url.pathname,

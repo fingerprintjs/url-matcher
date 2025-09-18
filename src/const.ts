@@ -1,1 +1,3 @@
-export const SUPPORTED_PROTOCOLS = ['http:', 'https:']
+import { Protocol } from './types'
+
+export const SUPPORTED_PROTOCOLS: Protocol[] = ['http:', 'https:']
