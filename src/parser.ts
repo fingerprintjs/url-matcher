@@ -48,9 +48,10 @@ export function parseRoutes<Target extends string = string>(
     }
     const url = new URL(urlInput)
 
-    const protocol = hasProtocol ? url.protocol : undefined
-    if (protocol) {
-      validateProtocol(protocol)
+    let protocol: Protocol | undefined
+    if (hasProtocol) {
+      validateProtocol(url.protocol)
+      protocol = url.protocol
     }
 
     const specificity = sortBySpecificity ? routeSpecificity(url) : undefined
@@ -85,7 +86,7 @@ export function parseRoutes<Target extends string = string>(
       route,
       target,
       specificity,
-      protocol: protocol as Protocol,
+      protocol,
       wildcardHostnamePrefix: allowHostnamePrefix,
       hostname: anyHostname ? '' : url.hostname,
       path: url.pathname,
