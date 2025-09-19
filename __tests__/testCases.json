@@ -1,0 +1,273 @@
+[
+  {
+    "url": "https://fingerprint.com",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": true,
+    "only": false
+  },
+  {
+    "url": "https://fingerprint.com",
+    "patterns": [
+      "http://fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "http://fingerprint.com",
+    "patterns": [
+      "http://fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "http://fingerprint.com",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://api.fingerprint.com",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://api.fingerprint.com",
+    "patterns": [
+      "*.fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com",
+    "patterns": [
+      "*.fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://api.fingerprint.com",
+    "patterns": [
+      "*fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com",
+    "patterns": [
+      "*fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://sub.api.fingerprint.com",
+    "patterns": [
+      "*.fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/api",
+    "patterns": [
+      "fingerprint.com/api"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/dashboard",
+    "patterns": [
+      "fingerprint.com/api"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://fingerprint.com/api/v1/visitor",
+    "patterns": [
+      "fingerprint.com/api/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/api/v1/visitor",
+    "patterns": [
+      "fingerprint.com/api*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/api",
+    "patterns": [
+      "fingerprint.com/api/*"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://fingerprint.com/api",
+    "patterns": [
+      "fingerprint.com/api*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://api.fingerprint.com/v1/visitor",
+    "patterns": [
+      "*.fingerprint.com/v1/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://dashboard.fingerprint.com/login",
+    "patterns": [
+      "*.fingerprint.com/v1/*"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://example.com",
+    "patterns": [
+      "fingerprint.com",
+      "example.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://test.com",
+    "patterns": [
+      "fingerprint.com",
+      "example.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://fingerprint.com/test?param=value",
+    "patterns": [
+      "fingerprint.com/test/*"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://fingerprint.com/test/test2?param=value",
+    "patterns": [
+      "fingerprint.com/test/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/test?param=value",
+    "patterns": [
+      "fingerprint.com/test*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/test?param=value",
+    "patterns": [
+      "fingerprint.com/test"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://FINGERPRINT.COM",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://API.FINGERPRINT.COM",
+    "patterns": [
+      "*.fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com/path",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://sub1.sub2.fingerprint.com",
+    "patterns": [
+      "*.fingerprint.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com.evil.com",
+    "patterns": [
+      "fingerprint.com"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://fingerprint.com.evil.com",
+    "patterns": [
+      "fingerprint.com",
+      "fingerprint.com.evil.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://fingerprint.com.evil.com",
+    "patterns": [
+      "fingerprint.com",
+      "fingerprint.com.evil.com/page"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://glöd.se",
+    "patterns": [
+      "glöd.se/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se/*"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se/"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://glöd.se/español",
+    "patterns": [
+      "glöd.se"
+    ],
+    "expected": false
+  },
+  {
+    "url": "https://español.com",
+    "patterns": [
+      "xn--espaol-zwa.com"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://xn--espaol-zwa.com",
+    "patterns": [
+      "español.com"
+    ],
+    "expected": true
+  }
+]

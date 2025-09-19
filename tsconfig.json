@@ -5,6 +5,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "target": "es2020",
+    "exactOptionalPropertyTypes": false
   },
   "files": ["src/index.ts"],
   "exclude": [
