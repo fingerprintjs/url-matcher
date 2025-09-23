@@ -1,6 +1,6 @@
 export type Protocol = 'http:' | 'https:'
 
-export type Route<Target extends string = string> = {
+export type Route<Metadata extends RouteMetadata = RouteMetadata> = {
   /**
    * The original route string that was parsed to create this Route object.
    * Contains the full route pattern as originally provided, including any protocols, wildcards, hostnames, and paths.
@@ -10,21 +10,21 @@ export type Route<Target extends string = string> = {
   route: string
 
   /**
-   * Extracted target if `RouteParam` was provided.
+   * Extracted metadata if `RouteWithMetadata` was provided.
    *
    * @example
    * ```typescript
    *
-   * // Routes with target "identification"
-   * const identificationPages = ["..."].map((page) => ({ url: page, target: "identification" }))
-   * // Routes with target "protection"
-   * const pagesToProtect = ["..."].map((page) => ({ url: page, target: "protection" }))
+   * // Routes with type "identification"
+   * const identificationPages = ["..."].map((page) => ({ url: page, metadata: { type: "identification" } }))
+   * // Routes with type "protection"
+   * const pagesToProtect = ["..."].map((page) => ({ url: page, metadata: { type: "protection"} }))
    *
    * const parsedRoutes = parseRoutes([...identificationPages, ...pagesToProtect], true)
    * const matchedRoute = findMatchingRoute(new URL('<PAGE_URL>'), parsedRoutes)
    *
-   * // "target" can be either "identification" or "protection"
-   * switch (matchedRoute?.target) {
+   * // "type" can be either "identification" or "protection"
+   * switch (matchedRoute?.metadata?.type) {
    *     case "identification":
    *        // Handle identification
    *
@@ -33,7 +33,7 @@ export type Route<Target extends string = string> = {
    * }
    * ```
    * */
-  target?: Target
+  metadata?: Metadata
 
   /**
    * The protocol part of the route. Can be either `https:` or `http`.
@@ -76,12 +76,16 @@ export type Route<Target extends string = string> = {
   wildcardPathSuffix: boolean
 }
 
-export type RouteParam<Target extends string = string> = {
-  url: string
-  target: Target
+export type RouteMetadata<Type = any> = {
+  type: Type
 }
 
-export type RawRoute<Target extends string = string> = RouteParam<Target> | string
+export type RouteWithMetadata<Metadata extends RouteMetadata = RouteMetadata> = {
+  url: string
+  metadata?: Metadata
+}
+
+export type RouteParam<Metadata extends RouteMetadata = RouteMetadata> = RouteWithMetadata<Metadata> | string
 
 export type ParseRoutesOptions = {
   /**

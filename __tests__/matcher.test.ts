@@ -1,6 +1,6 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes, findMatchingRoute } from '../src'
+import { findMatchingRoute, InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
@@ -38,35 +38,43 @@ describe('Matcher', () => {
     )
   })
 
-  it('should return target to matched route if it was set', () => {
+  it('should return metadata of the matched route if it was set', () => {
     const routes = parseRoutes([
       {
         url: 'https://example.com/blog/*',
-        target: 'blog',
+        metadata: {
+          type: 'blog',
+        },
       },
       {
         url: 'https://fingerprint.com',
-        target: 'fingerprint',
+        metadata: {
+          type: 'fingerprint',
+        },
       },
       'https://google.com',
-    ])
+    ] as const)
 
     const matchedRoute = findMatchingRoute(new URL('https://example.com/blog/post123'), routes)
 
-    expect(matchedRoute?.target).toBe('blog')
+    expect(matchedRoute?.metadata?.type).toBe('blog')
   })
 
-  it('should return target to matched route if it was set respecting specificity', () => {
+  it('should return metadata of the matched route if it was set respecting specificity', () => {
     const routes = parseRoutes(
       [
         {
           url: 'https://example.com/blog/*',
-          target: 'blog',
+          metadata: {
+            type: 'blog',
+          },
         },
         'https://google.com',
         {
           url: 'https://example.com/blog/post123',
-          target: 'specific-blog',
+          metadata: {
+            type: 'specific-blog',
+          },
         },
       ] as const,
       { sortBySpecificity: true }
@@ -74,7 +82,7 @@ describe('Matcher', () => {
 
     const matchedRoute = findMatchingRoute(new URL('https://example.com/blog/post123'), routes)
 
-    expect(matchedRoute?.target).toBe('specific-blog')
+    expect(matchedRoute?.metadata?.type).toBe('specific-blog')
   })
 
   testCases.forEach((testCase, index) => {

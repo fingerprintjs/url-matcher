@@ -86,24 +86,24 @@ if (matchedRoute) {
 }
 ```
 
-### Working with Targets
+### Working with Route Types
 
-You can associate targets with routes for easier handling of different route types:
+You can associate types with routes for easier handling of different routes:
 
 ```typescript
-import {parseRoutes, findMatchingRoute, RouteParam} from '@fingerprintjs/url-matcher'
+import {parseRoutes, findMatchingRoute, RouteWithMetadata} from '@fingerprintjs/url-matcher'
 
-const routesWithTargets: RouteParam<'api' | 'admin' | 'public'>[] = [
-    {url: 'example.com/api/*', target: 'api'},
-    {url: 'example.com/admin/*', target: 'admin'},
-    {url: 'example.com/*', target: 'public'}
-]
+const routesWithTypes = [
+    {url: 'example.com/api/*', metadata: {type: 'api'}},
+    {url: 'example.com/admin/*', metadata: {type: 'admin'}},
+    {url: 'example.com/*', metadata: {type: 'public'}}
+] as const satisfies RouteWithMetadata[]
 
-const routes = parseRoutes(routesWithTargets)
+const routes = parseRoutes(routesWithTypes)
 const url = new URL('https://example.com/api/users')
 const matchedRoute = findMatchingRoute(url, routes)
 
-switch (matchedRoute?.target) {
+switch (matchedRoute?.metadata?.type) {
     case 'api':
         console.log('Handle API request')
         break

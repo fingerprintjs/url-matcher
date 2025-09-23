@@ -1,4 +1,4 @@
-import { Route } from './types'
+import { Route, RouteMetadata } from './types'
 import { parseRoutes } from './parser'
 import { validateProtocol } from './validation'
 
@@ -10,10 +10,10 @@ import { validateProtocol } from './validation'
  *
  * @return {Route | undefined} Returns matched route, or undefined if no match is found.
  */
-export function findMatchingRoute<Target extends string = string>(
+export function findMatchingRoute<Metadata extends RouteMetadata = RouteMetadata>(
   url: URL,
-  routes: Route<Target>[]
-): Route<Target> | undefined {
+  routes: Route<Metadata>[]
+): Route<Metadata> | undefined {
   for (const route of routes) {
     if (route.protocol && route.protocol !== url.protocol) {
       continue
