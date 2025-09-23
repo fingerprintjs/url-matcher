@@ -21,7 +21,7 @@ export type Route<Target extends string = string> = {
    * const pagesToProtect = ["..."].map((page) => ({ url: page, target: "protection" }))
    *
    * const parsedRoutes = parseRoutes([...identificationPages, ...pagesToProtect], true)
-   * const matchedRoute = matchRoutes(parsedRoutes, new URL('<PAGE_URL>'))
+   * const matchedRoute = findMatchingRoute(new URL('<PAGE_URL>'), parsedRoutes)
    *
    * // "target" can be either "identification" or "protection"
    * switch (matchedRoute?.target) {

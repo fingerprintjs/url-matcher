@@ -1,6 +1,6 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes, matchRoutes } from '../src'
+import { InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes, findMatchingRoute } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
@@ -51,7 +51,7 @@ describe('Matcher', () => {
       'https://google.com',
     ])
 
-    const matchedRoute = matchRoutes(routes, new URL('https://example.com/blog/post123'))
+    const matchedRoute = findMatchingRoute(new URL('https://example.com/blog/post123'), routes)
 
     expect(matchedRoute?.target).toBe('blog')
   })
@@ -72,7 +72,7 @@ describe('Matcher', () => {
       { sortBySpecificity: true }
     )
 
-    const matchedRoute = matchRoutes(routes, new URL('https://example.com/blog/post123'))
+    const matchedRoute = findMatchingRoute(new URL('https://example.com/blog/post123'), routes)
 
     expect(matchedRoute?.target).toBe('specific-blog')
   })

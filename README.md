@@ -65,10 +65,10 @@ if (matchesPatterns(url, patterns)) {
 
 ### Advanced Route Matching
 
-For more control, use `parseRoutes` and `matchRoutes` to work with parsed route objects:
+For more control, use `parseRoutes` and `findMatchingRoute` to work with parsed route objects:
 
 ```typescript
-import {parseRoutes, matchRoutes} from '@fingerprintjs/url-matcher'
+import {parseRoutes, findMatchingRoute} from '@fingerprintjs/url-matcher'
 
 const routes = parseRoutes([
     'example.com/api/*',
@@ -77,7 +77,7 @@ const routes = parseRoutes([
 ])
 
 const url = new URL('https://api.example.com/users/123')
-const matchedRoute = matchRoutes(routes, url)
+const matchedRoute = findMatchingRoute(url, routes)
 
 if (matchedRoute) {
     console.log(`Matched route: ${matchedRoute.route}`)
@@ -91,7 +91,7 @@ if (matchedRoute) {
 You can associate targets with routes for easier handling of different route types:
 
 ```typescript
-import {parseRoutes, matchRoutes, RouteParam} from '@fingerprintjs/url-matcher'
+import {parseRoutes, findMatchingRoute, RouteParam} from '@fingerprintjs/url-matcher'
 
 const routesWithTargets: RouteParam<'api' | 'admin' | 'public'>[] = [
     {url: 'example.com/api/*', target: 'api'},
@@ -101,7 +101,7 @@ const routesWithTargets: RouteParam<'api' | 'admin' | 'public'>[] = [
 
 const routes = parseRoutes(routesWithTargets)
 const url = new URL('https://example.com/api/users')
-const matchedRoute = matchRoutes(routes, url)
+const matchedRoute = findMatchingRoute(url, routes)
 
 switch (matchedRoute?.target) {
     case 'api':
@@ -121,7 +121,7 @@ switch (matchedRoute?.target) {
 Routes can be sorted by specificity to ensure more specific patterns are matched first:
 
 ```typescript
-import {parseRoutes, matchRoutes} from '@fingerprintjs/url-matcher'
+import {parseRoutes, findMatchingRoute} from '@fingerprintjs/url-matcher'
 
 const routes = parseRoutes([
     'example.com/*',           // Less specific
@@ -130,7 +130,7 @@ const routes = parseRoutes([
 ], {sortBySpecificity: true})
 
 const url = new URL('https://example.com/api/users')
-const matchedRoute = matchRoutes(routes, url)
+const matchedRoute = findMatchingRoute(url, routes)
 
 // Will match the most specific route: 'example.com/api/users'
 console.log(matchedRoute?.route)
