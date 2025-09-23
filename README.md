@@ -44,11 +44,11 @@ pnpm add @fingerprintjs/url-matcher
 
 ### Basic Pattern Matching
 
-The simplest way to use the library is with the `matchPatterns` function, which takes an array of URL patterns and
+The simplest way to use the library is with the `matchesPatterns` function, which takes an array of URL patterns and
 checks if a given URL matches any of them:
 
 ```typescript
-import {matchPatterns} from '@fingerprintjs/url-matcher'
+import {matchesPatterns} from '@fingerprintjs/url-matcher'
 
 const patterns = [
     'example.com/api/*',
@@ -58,7 +58,7 @@ const patterns = [
 
 const url = new URL('https://api.example.com/users/123')
 
-if (matchPatterns(patterns, url)) {
+if (matchesPatterns(url, patterns)) {
     console.log('URL matches one of the patterns!')
 }
 ```
@@ -172,11 +172,11 @@ const routes = parseRoutes([
 The library validates URLs and patterns, throwing specific errors for invalid inputs:
 
 ```typescript
-import {matchPatterns, InvalidProtocolError, InvalidPatternError} from '@fingerprintjs/url-matcher'
+import {matchesPatterns, InvalidProtocolError, InvalidPatternError} from '@fingerprintjs/url-matcher'
 
 try {
     const url = new URL('ftp://example.com')  // Invalid protocol
-    matchPatterns(['example.com'], url)
+    matchesPatterns(url, ['example.com'])
 } catch (error) {
     if (error instanceof InvalidProtocolError) {
         console.log('Only HTTP and HTTPS protocols are supported')
@@ -185,7 +185,7 @@ try {
 
 try {
     // Invalid pattern with query string
-    matchPatterns(['example.com/path?query=value'], new URL('https://example.com'))
+    matchesPatterns(new URL('https://example.com'), ['example.com/path?query=value'])
 } catch (error) {
     if (error instanceof InvalidPatternError) {
         console.log(error.code) // ERR_QUERY_STRING
@@ -195,7 +195,7 @@ try {
 
 try {
     // Invalid pattern with infix wildcard
-    matchPatterns(['example.com/*/path'], new URL('https://example.com'))
+    matchesPatterns(new URL('https://example.com'), ['example.com/*/path'])
 } catch (error) {
     if (error instanceof InvalidPatternError) {
         console.log(error.code) // ERR_INFIX_WILDCARD

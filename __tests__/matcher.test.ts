@@ -1,12 +1,12 @@
 import * as testCases from './testCases.json'
 import { cloudflareMatchUrl } from './cloudflare'
-import { InvalidPatternError, InvalidProtocolError, matchPatterns, parseRoutes, matchRoutes } from '../src'
+import { InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes, matchRoutes } from '../src'
 
 describe('Matcher', () => {
   // Based on miniflare behaviour
   it('should throw for an infix wildcard', () => {
     expect(() =>
-      matchPatterns(['fingerprint.com/blog/*/post-*'], new URL('https://example.com/blog/2025/post-1'))
+      matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['fingerprint.com/blog/*/post-*'])
     ).toThrow(
       new InvalidPatternError(
         'Route "fingerprint.com/blog/*/post-*" contains an infix wildcard. This is not allowed.',
@@ -17,7 +17,7 @@ describe('Matcher', () => {
 
   it('should throw if pattern contains query string', () => {
     expect(() =>
-      matchPatterns(['fingerprint.com/blog/post123?q=test'], new URL('https://example.com/blog/2025/post-1'))
+      matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['fingerprint.com/blog/post123?q=test'])
     ).toThrow(
       new InvalidPatternError(
         'Route "fingerprint.com/blog/post123?q=test" contains a query string. This is not allowed.',
@@ -27,13 +27,13 @@ describe('Matcher', () => {
   })
 
   it.each(['ws', 'ftp'])('should throw for invalid protocol passed in patterns: %s', (protocol) => {
-    expect(() => matchPatterns([`${protocol}://example.com`], new URL('https://example.com'))).toThrow(
+    expect(() => matchesPatterns(new URL('https://example.com'), [`${protocol}://example.com`])).toThrow(
       new InvalidProtocolError(protocol)
     )
   })
 
   it.each(['ws', 'ftp'])('should throw for invalid protocol passed in URL: %s', (protocol) => {
-    expect(() => matchPatterns([`https://example.com`], new URL(`${protocol}://example.com`))).toThrow(
+    expect(() => matchesPatterns(new URL(`${protocol}://example.com`), [`https://example.com`])).toThrow(
       new InvalidProtocolError(protocol)
     )
   })
@@ -83,11 +83,11 @@ describe('Matcher', () => {
 
     describe(`#${index + 1} Match for ${testCase.url} with ${testCase.patterns.join(',')}`, () => {
       test(`should be ${testCase.expected ? 'matched' : 'not matched'}`, () => {
-        expect(matchPatterns(testCase.patterns, new URL(testCase.url))).toBe(testCase.expected)
+        expect(matchesPatterns(new URL(testCase.url), testCase.patterns)).toBe(testCase.expected)
       })
 
       test('should match Cloudflare implementation', () => {
-        const ourMatchResult = matchPatterns(testCase.patterns, new URL(testCase.url))
+        const ourMatchResult = matchesPatterns(new URL(testCase.url), testCase.patterns)
         const cloudflareMatchResult = cloudflareMatchUrl(testCase.url, testCase.patterns)
 
         expect(ourMatchResult).toBe(cloudflareMatchResult)
