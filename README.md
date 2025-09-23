@@ -202,6 +202,16 @@ try {
         console.log('Infix wildcards are not allowed in patterns')
     }
 }
+
+try {
+    // Invalid pattern URL
+    matchesPatterns(new URL('https://example.com'), ['exa mple.com/*/path'])
+} catch (error) {
+    if (error instanceof InvalidPatternError) {
+        console.log(error.code) // ERR_INVALID_URL
+        console.log('Infix wildcards are not allowed in patterns')
+    }
+}
 ```
 
 ## API Reference

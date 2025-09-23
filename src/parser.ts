@@ -20,6 +20,14 @@ function routeSpecificity(url: URL) {
   return hostScore * 26 + pathScore
 }
 
+function parsePatternUrl(pattern: string): URL {
+  try {
+    return new URL(pattern)
+  } catch {
+    throw new InvalidPatternError(`Pattern ${pattern} is not a valid URL`, 'ERR_INVALID_URL')
+  }
+}
+
 /**
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
  *
@@ -46,7 +54,7 @@ export function parseRoutes<Metadata extends RouteMetadata>(
     if (!hasProtocol) {
       urlInput = `https://${urlInput}`
     }
-    const url = new URL(urlInput)
+    const url = parsePatternUrl(urlInput)
 
     let protocol: Protocol | undefined
     if (hasProtocol) {

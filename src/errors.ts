@@ -10,7 +10,7 @@ export class InvalidProtocolError extends Error {
   }
 }
 
-export type InvalidPatternErrorCode = 'ERR_QUERY_STRING' | 'ERR_INFIX_WILDCARD'
+export type InvalidPatternErrorCode = 'ERR_QUERY_STRING' | 'ERR_INFIX_WILDCARD' | 'ERR_INVALID_URL'
 
 export class InvalidPatternError extends Error {
   readonly code: InvalidPatternErrorCode

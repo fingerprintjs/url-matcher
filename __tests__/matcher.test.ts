@@ -38,6 +38,12 @@ describe('Matcher', () => {
     )
   })
 
+  it('should throw for invalid url in patterns', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['https://ex ample.com'])).toThrow(
+      new InvalidPatternError('Pattern https://ex ample.com is not a valid URL', 'ERR_INVALID_URL')
+    )
+  })
+
   it('should return metadata of the matched route if it was set', () => {
     const routes = parseRoutes([
       {
