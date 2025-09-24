@@ -213,7 +213,7 @@ try {
 } catch (error) {
     if (error instanceof InvalidPatternError) {
         console.log(error.code) // ERR_INVALID_URL
-        console.log('Infix wildcards are not allowed in patterns')
+        console.log('Patterns must be valid URLs')
     }
 }
 ```
