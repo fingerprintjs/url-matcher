@@ -62,7 +62,6 @@ describe('Matcher', () => {
     ] as const)
 
     const matchedRoute = findMatchingRoute(new URL('https://example.com/blog/post123'), routes)
-
     expect(matchedRoute?.metadata?.type).toBe('blog')
   })
 

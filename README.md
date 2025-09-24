@@ -86,23 +86,27 @@ if (matchedRoute) {
 }
 ```
 
-### Working with Route Types
+### Working with Route Metadata
 
-You can associate types with routes for easier handling of different routes:
+You can associate metadata with routes for easier handling of the matched route:
 
 ```typescript
 import {parseRoutes, findMatchingRoute, RouteWithMetadata} from '@fingerprintjs/url-matcher'
 
-const routesWithTypes = [
+// Include metadata that contains a specific route type that we need to match.
+const routesWithTypes: RouteWithMetadata<{
+    type: 'public' | 'admin' | 'api'
+}>[] = [
     {url: 'example.com/api/*', metadata: {type: 'api'}},
     {url: 'example.com/admin/*', metadata: {type: 'admin'}},
     {url: 'example.com/*', metadata: {type: 'public'}}
-] as const satisfies RouteWithMetadata[]
+]
 
 const routes = parseRoutes(routesWithTypes)
 const url = new URL('https://example.com/api/users')
 const matchedRoute = findMatchingRoute(url, routes)
 
+// matchedRoute.metadata is of type {type: 'api'} | {type: 'admin'} | {type: 'public'}
 switch (matchedRoute?.metadata?.type) {
     case 'api':
         console.log('Handle API request')

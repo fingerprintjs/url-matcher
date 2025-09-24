@@ -1,6 +1,6 @@
 export type Protocol = 'http:' | 'https:'
 
-export type Route<Metadata extends RouteMetadata = RouteMetadata> = {
+export type Route<Metadata> = {
   /**
    * The original route string that was parsed to create this Route object.
    * Contains the full route pattern as originally provided, including any protocols, wildcards, hostnames, and paths.
@@ -11,27 +11,6 @@ export type Route<Metadata extends RouteMetadata = RouteMetadata> = {
 
   /**
    * Extracted metadata if `RouteWithMetadata` was provided.
-   *
-   * @example
-   * ```typescript
-   *
-   * // Routes with type "identification"
-   * const identificationPages = ["..."].map((page) => ({ url: page, metadata: { type: "identification" } }))
-   * // Routes with type "protection"
-   * const pagesToProtect = ["..."].map((page) => ({ url: page, metadata: { type: "protection"} }))
-   *
-   * const parsedRoutes = parseRoutes([...identificationPages, ...pagesToProtect], true)
-   * const matchedRoute = findMatchingRoute(new URL('<PAGE_URL>'), parsedRoutes)
-   *
-   * // "type" can be either "identification" or "protection"
-   * switch (matchedRoute?.metadata?.type) {
-   *     case "identification":
-   *        // Handle identification
-   *
-   *     case "protection":
-   *        // Handle protection
-   * }
-   * ```
    * */
   metadata?: Metadata
 
@@ -76,16 +55,11 @@ export type Route<Metadata extends RouteMetadata = RouteMetadata> = {
   wildcardPathSuffix: boolean
 }
 
-export type RouteMetadata<Type = any> = {
-  type: Type
-}
-
-export type RouteWithMetadata<Metadata extends RouteMetadata = RouteMetadata> = {
+export type RouteWithMetadata<Metadata> = {
   url: string
   metadata?: Metadata
 }
-
-export type RouteParam<Metadata extends RouteMetadata = RouteMetadata> = RouteWithMetadata<Metadata> | string
+export type RouteParam<Metadata> = RouteWithMetadata<Metadata> | string
 
 export type ParseRoutesOptions = {
   /**

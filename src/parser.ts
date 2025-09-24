@@ -1,4 +1,4 @@
-import { ParseRoutesOptions, Protocol, RouteParam, Route, RouteMetadata } from './types'
+import { ParseRoutesOptions, Protocol, Route, RouteParam } from './types'
 import { validateProtocol } from './validation'
 import { InvalidPatternError } from './errors'
 
@@ -38,7 +38,7 @@ function parsePatternUrl(pattern: string): URL {
  * @throws {InvalidProtocolError} If provided URL protocol in one of the routes is not `http:` or `https:`.
  * @throws {InvalidPatternError} If a route contains a query string or infix wildcard which is not allowed.
  */
-export function parseRoutes<Metadata extends RouteMetadata>(
+export function parseRoutes<Metadata>(
   allRoutes: RouteParam<Metadata>[],
   { sortBySpecificity = false }: ParseRoutesOptions = {}
 ): Route<Metadata>[] {
