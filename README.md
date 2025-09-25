@@ -15,65 +15,209 @@
   <a href="https://discord.gg/39EpE2neBg"><img src="https://img.shields.io/discord/852099967190433792?style=logo&label=Discord&logo=Discord&logoColor=white" alt="Discord server"></a>
   <a href="https://fingerprintjs.github.io/url-matcher/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
 </p>
-This is template repository for creating TypeScript libraries by FingerprintJS team.
 
-## Features
-* [Typescript](https://www.typescriptlang.org/) support
-* [Jest](https://jestjs.io/) setup
-* Lint using [ESLint](https://eslint.org/)
-* [Prettier](https://prettier.io/) integration
-* Docs generation using [typedoc](https://typedoc.org/) with deployment to GitHub Pages
-* Automated releases using [semantic-release](https://github.com/semantic-release/semantic-release)
-* Conventional commits with commit lint using git hooks
+URL matching library that is equivalent to the matching behavior Cloudflare uses
+for [worker routes](https://developers.cloudflare.com/workers/configuration/routing/routes/#matching-behavior).
+It's designed to work both in browser and in Node.js.
 
-## Quick start
+## Installation
 
-1. Clone this repository, remove `.git` folder and call `git init` / Use `Use this template` GitHub button
-2. Setup project specific fields in package.json
-3. Setup `artifactName` and other build properties in `rollup.config.js`
-4. If your project emits `.d.ts` typings, set correct path in `package.json` for `test:dts` command or remove it 
-5. Use `src` folder to organize your code and put tests in `__test__` folder
-6. If you want isolated run you can use Docker
-7. Push your repo, check that GitHub actions works
-8. Add badges
-9. You are awesome!
+Using [npm](https://npmjs.org):
 
-## Best practice
+```sh
+npm install @fingerprintjs/url-matcher
+```
 
-### Choosing name for repository
+Using [yarn](https://yarnpkg.com):
 
-Check [FingerprintJS naming conventions](https://github.com/fingerprintjs/home/wiki/FingerprintJS-Naming-Conventions)
+```sh
+yarn add @fingerprintjs/url-matcher
+```
 
-### Team best practise
+Using [pnpm](https://pnpm.js.org):
 
-Described in [Integrations and repositories best practices](https://github.com/fingerprintjs/home/wiki/Integrations-and-repositories-best-practices)
+```sh
+pnpm add @fingerprintjs/url-matcher
+```
 
-### Tests
+## Usage
 
-For unit tests, we use jest, because of the good infrastructure, flexible instruments for mocks and big community.
+### Basic Pattern Matching
 
-This repository contains example of how to configure code coverage reporting without SaaS solutions like codecov
-(such solutions require token with full access to the repository).
-In [PR#13](https://github.com/fingerprintjs/url-matcher/pull/13) you can find what you need to configure:
-- workflow to update the coverage badge in the readme and publish a full report for the main branch
-- workflow to add a comment to pr with coverage of the current branch and diff with main
+The simplest way to use the library is with the `matchesPatterns` function, which takes an array of URL patterns and
+checks if a given URL matches any of them:
 
-### Documentation
+```typescript
+import {matchesPatterns} from '@fingerprintjs/url-matcher'
 
-For API reference we use `typedoc` package and publish documentation in GitHub Pages.
+const patterns = [
+    'example.com/api/*',
+    '*.example.com/users/*',
+    'https://app.example.com/dashboard'
+]
 
-### Publish to npm
+const url = new URL('https://api.example.com/users/123')
 
-Publishing to NPM is automated thanks to [semantic-release](https://github.com/semantic-release/semantic-release).
-On every push to `main` branch it will analyze commits and release new version accordingly to changes.
+if (matchesPatterns(url, patterns)) {
+    console.log('URL matches one of the patterns!')
+}
+```
 
-To set it up:
+### Advanced Route Matching
 
-1. Add `NPM_AUTH_TOKEN` to the repository secrets area
-2. Add `GH_RELEASE_TOKEN` to the repository secrets area, it should have following permissions: `public_repo`, or `repo` if your repository is private.
-   Thanks to that, you will get automatic releases on GitHub, comments on issues and more!
-3. Package will publish automatically to NPM when there are relevant changes
-4. You are awesome!
+For more control, use `parseRoutes` and `findMatchingRoute` to work with parsed route objects:
 
-### Preparing product for release
-Just follow [checklist for publishing new integration](https://github.com/fingerprintjs/home/wiki/Checklist-for-publishing-new-integration)
+```typescript
+import {parseRoutes, findMatchingRoute} from '@fingerprintjs/url-matcher'
+
+const routes = parseRoutes([
+    'example.com/api/*',
+    '*.example.com/users/*',
+    'https://app.example.com/dashboard'
+])
+
+const url = new URL('https://api.example.com/users/123')
+const matchedRoute = findMatchingRoute(url, routes)
+
+if (matchedRoute) {
+    console.log(`Matched route: ${matchedRoute.route}`)
+    console.log(`Hostname: ${matchedRoute.hostname}`)
+    console.log(`Path: ${matchedRoute.path}`)
+}
+```
+
+### Working with Route Metadata
+
+You can associate metadata with routes for easier handling of the matched route:
+
+```typescript
+import {parseRoutes, findMatchingRoute, RouteWithMetadata} from '@fingerprintjs/url-matcher'
+
+// Include metadata that contains a specific route type that we need to match.
+const routesWithTypes: RouteWithMetadata<{
+    type: 'public' | 'admin' | 'api'
+}>[] = [
+    {url: 'example.com/api/*', metadata: {type: 'api'}},
+    {url: 'example.com/admin/*', metadata: {type: 'admin'}},
+    {url: 'example.com/*', metadata: {type: 'public'}}
+]
+
+const routes = parseRoutes(routesWithTypes)
+const url = new URL('https://example.com/api/users')
+const matchedRoute = findMatchingRoute(url, routes)
+
+// matchedRoute.metadata is of type {type: 'api'} | {type: 'admin'} | {type: 'public'}
+switch (matchedRoute?.metadata?.type) {
+    case 'api':
+        console.log('Handle API request')
+        break
+    case 'admin':
+        console.log('Handle admin request')
+        break
+    case 'public':
+        console.log('Handle public request')
+        break
+}
+```
+
+### Sorting by Specificity
+
+Routes can be sorted by specificity to ensure more specific patterns are matched first:
+
+```typescript
+import {parseRoutes, findMatchingRoute} from '@fingerprintjs/url-matcher'
+
+const routes = parseRoutes([
+    'example.com/*',           // Less specific
+    'example.com/api/*',       // More specific
+    'example.com/api/users'    // Most specific
+], {sortBySpecificity: true})
+
+const url = new URL('https://example.com/api/users')
+const matchedRoute = findMatchingRoute(url, routes)
+
+// Will match the most specific route: 'example.com/api/users'
+console.log(matchedRoute?.route)
+```
+
+### Wildcard Patterns
+
+The library supports Cloudflare-style wildcards:
+
+- **Hostname wildcards**: Use `*` as a subdomain prefix
+  ```typescript
+  '*.example.com'     // Matches sub.example.com, api.example.com, etc.
+  '*'                 // Matches any hostname
+  ```
+
+- **Path wildcards**: Use `*` as a path suffix
+  ```typescript
+  'example.com/api/*'    // Matches /api/users, /api/posts/123, etc.
+  'example.com/*'        // Matches any path on example.com
+  ```
+
+> ⚠️ Infix wildcards are not supported. Passing them will throw an `InvalidPatternError`
+
+### Protocol Matching
+
+Specify protocols explicitly or let routes match any protocol:
+
+```typescript
+const routes = parseRoutes([
+  'https://secure.example.com/*',  // Only HTTPS
+  'http://legacy.example.com/*',   // Only HTTP
+  'example.com/*'                  // Any protocol (HTTP or HTTPS)
+])
+```
+> 💡 Only HTTP and HTTPS protocols are supported.
+
+### Error Handling
+
+The library validates URLs and patterns, throwing specific errors for invalid inputs:
+
+```typescript
+import {matchesPatterns, InvalidProtocolError, InvalidPatternError} from '@fingerprintjs/url-matcher'
+
+try {
+    const url = new URL('ftp://example.com')  // Invalid protocol
+    matchesPatterns(url, ['example.com'])
+} catch (error) {
+    if (error instanceof InvalidProtocolError) {
+        console.log('Only HTTP and HTTPS protocols are supported')
+    }
+}
+
+try {
+    // Invalid pattern with query string
+    matchesPatterns(new URL('https://example.com'), ['example.com/path?query=value'])
+} catch (error) {
+    if (error instanceof InvalidPatternError) {
+        console.log(error.code) // ERR_QUERY_STRING
+        console.log('Query strings are not allowed in patterns')
+    }
+}
+
+try {
+    // Invalid pattern with infix wildcard
+    matchesPatterns(new URL('https://example.com'), ['example.com/*/path'])
+} catch (error) {
+    if (error instanceof InvalidPatternError) {
+        console.log(error.code) // ERR_INFIX_WILDCARD
+        console.log('Infix wildcards are not allowed in patterns')
+    }
+}
+
+try {
+    // Invalid pattern URL
+    matchesPatterns(new URL('https://example.com'), ['exa mple.com/*/path'])
+} catch (error) {
+    if (error instanceof InvalidPatternError) {
+        console.log(error.code) // ERR_INVALID_URL
+        console.log('Patterns must be valid URLs')
+    }
+}
+```
+
+## API Reference
+
+See the full [generated API reference](https://fingerprintjs.github.io/url-matcher/).
