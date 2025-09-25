@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.34% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/43</span>
+                <span class='fraction'>44/46</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.34% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/43</span>
+                <span class='fraction'>44/46</span>
             </div>
         
             
@@ -173,7 +173,15 @@
 <a name='L108'></a><a href='#L108'>108</a>
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,6 +204,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -209,19 +225,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">166x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">166x</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">190x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">190x</span>
 <span class="cline-any cline-yes">164x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
-<span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">188x</span>
+<span class="cline-any cline-yes">190x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">188x</span>
@@ -283,7 +299,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ParseRoutesOptions, Protocol, RawRoute, Route } from './types'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ParseRoutesOptions, Protocol, Route, RouteParam } from './types'
 import { validateProtocol } from './validation'
 import { InvalidPatternError } from './errors'
 &nbsp;
@@ -305,25 +321,33 @@ function routeSpecificity(url: URL) {
   return hostScore * 26 + pathScore
 }
 &nbsp;
+function parsePatternUrl(pattern: string): URL {
+  try {
+    return new URL(pattern)
+  } catch {
+    throw new InvalidPatternError(`Pattern ${pattern} is not a valid URL`, 'ERR_INVALID_URL')
+  }
+}
+&nbsp;
 /**
  * Parses a list of route strings into an array of Route objects that contain detailed route information.
  *
- * @param {RawRoute[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
+ * @param {RouteParam[]} allRoutes - An array of route strings to be parsed. Each route string can contain protocols, hostnames, and paths.
  * @param {ParseRoutesOptions} options - Optional options.
  * @return {Route[]} An array of parsed Route objects with details such as hostname, path, and protocol.
  *
  * @throws {InvalidProtocolError} If provided URL protocol in one of the routes is not `http:` or `https:`.
  * @throws {InvalidPatternError} If a route contains a query string or infix wildcard which is not allowed.
  */
-export function parseRoutes&lt;Target extends string = string&gt;(
-  allRoutes: RawRoute&lt;Target&gt;[],
+export function parseRoutes&lt;Metadata&gt;(
+  allRoutes: RouteParam&lt;Metadata&gt;[],
   { sortBySpecificity = false }: ParseRoutesOptions = {}
-): Route&lt;Target&gt;[] {
-  const routes: Route&lt;Target&gt;[] = []
+): Route&lt;Metadata&gt;[] {
+  const routes: Route&lt;Metadata&gt;[] = []
 &nbsp;
   for (const rawRoute of allRoutes) {
     const route = typeof rawRoute === 'string' ? rawRoute : rawRoute.url
-    const target = typeof rawRoute === 'string' ? undefined : rawRoute.target
+    const metadata = typeof rawRoute === 'string' ? undefined : rawRoute.metadata
     const hasProtocol = /^[a-z0-9+\-.]+:\/\//i.test(route)
 &nbsp;
     let urlInput = route
@@ -331,7 +355,7 @@ export function parseRoutes&lt;Target extends string = string&gt;(
     if (!hasProtocol) {
       urlInput = `https://${urlInput}`
     }
-    const url = new URL(urlInput)
+    const url = parsePatternUrl(urlInput)
 &nbsp;
     let protocol: Protocol | undefined
     if (hasProtocol) {
@@ -369,7 +393,7 @@ export function parseRoutes&lt;Target extends string = string&gt;(
 &nbsp;
     routes.push({
       route,
-      target,
+      metadata,
       specificity,
       protocol,
       wildcardHostnamePrefix: allowHostnamePrefix,
@@ -400,7 +424,7 @@ export function parseRoutes&lt;Target extends string = string&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-19T09:08:35.343Z
+                at 2025-09-25T11:13:04.502Z
             </div>
         <script src="../prettify.js"></script>
         <script>
