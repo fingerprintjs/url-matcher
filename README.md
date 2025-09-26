@@ -16,6 +16,8 @@
   <a href="https://fingerprintjs.github.io/url-matcher/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
 </p>
 
+> ⚠️ **Work in progress**: This is a beta version of the library.
+
 URL matching library that is equivalent to the matching behavior Cloudflare uses
 for [worker routes](https://developers.cloudflare.com/workers/configuration/routing/routes/#matching-behavior).
 It's designed to work both in browser and in Node.js.
