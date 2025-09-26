@@ -20,6 +20,8 @@ URL matching library that is equivalent to the matching behavior Cloudflare uses
 for [worker routes](https://developers.cloudflare.com/workers/configuration/routing/routes/#matching-behavior).
 It's designed to work both in browser and in Node.js.
 
+> **Note**: This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
+
 ## Installation
 
 Using [npm](https://npmjs.org):
