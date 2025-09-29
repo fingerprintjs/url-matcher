@@ -12,7 +12,6 @@
   <a href="https://fingerprintjs.github.io/url-matcher/coverage/"><img src="https://fingerprintjs.github.io/url-matcher/coverage/badges.svg" alt="coverage"></a>
   <a href="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml"><img src="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml/badge.svg" alt="Release status"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/:license-mit-blue.svg" alt="MIT license"></a>
-  <a href="https://discord.gg/39EpE2neBg"><img src="https://img.shields.io/discord/852099967190433792?style=logo&label=Discord&logo=Discord&logoColor=white" alt="Discord server"></a>
   <a href="https://fingerprintjs.github.io/url-matcher/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
 </p>
 
