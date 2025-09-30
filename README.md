@@ -12,13 +12,16 @@
   <a href="https://fingerprintjs.github.io/url-matcher/coverage/"><img src="https://fingerprintjs.github.io/url-matcher/coverage/badges.svg" alt="coverage"></a>
   <a href="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml"><img src="https://github.com/fingerprintjs/url-matcher/actions/workflows/release.yml/badge.svg" alt="Release status"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/:license-mit-blue.svg" alt="MIT license"></a>
-  <a href="https://discord.gg/39EpE2neBg"><img src="https://img.shields.io/discord/852099967190433792?style=logo&label=Discord&logo=Discord&logoColor=white" alt="Discord server"></a>
   <a href="https://fingerprintjs.github.io/url-matcher/docs/"><img src="https://img.shields.io/badge/-Documentation-green" alt="Documentation"></a>
 </p>
+
+> ⚠️ **Work in progress**: This is a beta version of the library.
 
 URL matching library that is equivalent to the matching behavior Cloudflare uses
 for [worker routes](https://developers.cloudflare.com/workers/configuration/routing/routes/#matching-behavior).
 It's designed to work both in browser and in Node.js.
+
+> **Note**: This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
 
 ## Installation
 
