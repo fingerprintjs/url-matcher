@@ -1,18 +1,22 @@
 name: Release
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
       - test
+
+permissions:
+  id-token: write  # Required for Trusted Publishing: https://docs.npmjs.com/trusted-publishers
+  contents: read
 
 jobs:
   build-and-release:
     name: 'Build project, run CI checks and publish new release'
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml@v1
     with:
+      useTrustedPublishing: true
       appId: ${{ vars.APP_ID }}
+      distFolderNeedForRelease: true
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
