@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/url-matcher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "URL matching library that is equivalent to the matching behavior Cloudflare uses for worker routes.",
   "author": "FingerprintJS, Inc (https://fingerprint.com)",
   "license": "MIT",

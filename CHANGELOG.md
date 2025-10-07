@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/fingerprintjs/url-matcher/compare/v0.1.0...v0.1.1) (2025-10-07)
+
+
+### Bug Fixes
+
+* include `dist` in the package artifact ([562e809](https://github.com/fingerprintjs/url-matcher/commit/562e80946adcb09ce8213bc0015558faf5eb9a93))
+
 ## [0.1.0](https://github.com/fingerprintjs/url-matcher/compare/v0.0.1...v0.1.0) (2025-10-07)
 
 
