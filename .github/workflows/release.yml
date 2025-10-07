@@ -17,5 +17,6 @@ jobs:
     with:
       useTrustedPublishing: true
       appId: ${{ vars.APP_ID }}
+      distFolderNeedForRelease: true
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
