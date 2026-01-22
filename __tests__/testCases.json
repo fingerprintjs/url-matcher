@@ -269,5 +269,19 @@
       "español.com"
     ],
     "expected": true
+  },
+  {
+    "url": "https://sub.example.com/some/path",
+    "patterns": [
+      "*.example.com/some/path"
+    ],
+    "expected": true
+  },
+  {
+    "url": "https://example.com/some/path",
+    "patterns": [
+      "*.example.com/some/path"
+    ],
+    "expected": false
   }
 ]

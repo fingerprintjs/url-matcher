@@ -12,3 +12,6 @@ coverage.txt
 .vscode/
 yarn-error.log
 docs
+
+# tests
+test-results/

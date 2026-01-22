@@ -3,6 +3,10 @@ import { cloudflareMatchUrl } from './cloudflare'
 import { findMatchingRoute, InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes } from '../src'
 
 describe('Matcher', () => {
+  it('should work for patterns starting with a wildcard', () => {
+    expect(matchesPatterns(new URL('https://sub.example.com'), ['*.example.com'])).toBe(true)
+  })
+
   // Based on miniflare behaviour
   it('should throw for an infix wildcard', () => {
     expect(() =>
@@ -14,7 +18,14 @@ describe('Matcher', () => {
       )
     )
   })
-
+  it('should throw for an infix wildcard and a wildcard host', () => {
+    expect(() => matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['*/blog/*/post-*'])).toThrow(
+      new InvalidPatternError(
+        'Route "*/blog/*/post-*" contains an infix wildcard. This is not allowed.',
+        'ERR_INFIX_WILDCARD'
+      )
+    )
+  })
   it('should throw if pattern contains query string', () => {
     expect(() =>
       matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['fingerprint.com/blog/post123?q=test'])
