@@ -108,6 +108,9 @@ export function parseRoutes<Metadata>(
     const urlInputForParse = normalizeWildcardHostname(urlInput, urlParts)
     const url = parsePatternUrl(urlInputForParse)
 
+    if (!urlParts?.hostname) {
+      throw new InvalidPatternError(`Route "${route}" is missing a hostname. This is not allowed.`, 'ERR_INVALID_URL')
+    }
     let protocol: Protocol | undefined
     if (hasProtocol) {
       validateProtocol(url.protocol)
