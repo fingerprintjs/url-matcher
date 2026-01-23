@@ -30,6 +30,15 @@ describe('splitUrlInput', () => {
     })
   })
 
+  it('returns parts when there is no hostname', () => {
+    const result = splitUrlInput('https:///path')
+
+    expect(result).toEqual({
+      protocolPrefix: 'https://',
+      hostname: '',
+      rest: '/path',
+    })
+  })
   it('keeps wildcard hostnames intact', () => {
     const result = splitUrlInput('https://*.example.com/path')
 
