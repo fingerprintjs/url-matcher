@@ -2,15 +2,56 @@ import { ParseRoutesOptions, Protocol, Route, RouteParam } from './types'
 import { validateProtocol } from './validation'
 import { InvalidPatternError } from './errors'
 
-function routeSpecificity(url: URL) {
+const WILDCARD_HOSTNAME_PLACEHOLDER = 'wildcard'
+const PROTOCOL_SEPARATOR = '://'
+
+export type UrlParts = {
+  protocolPrefix: string
+  hostname: string
+  rest: string
+}
+
+// (protocol)://(hostname)(rest including path, query, fragment)
+const URL_PARTS_PATTERN = /^([a-z0-9+\-.]+:\/\/)([^/]*)(.*)$/i
+
+/**
+ * The reason we require manually parsing URLs instead of just passing it to URL()
+ * is that URL() constructor in the browser cannot handle parsing wildcards like `*.example.com`.
+ * Which is not obvious, since new URL('*.example.com') works in Node.
+ */
+export function splitUrlInput(urlInput: string): UrlParts | null {
+  const match = URL_PARTS_PATTERN.exec(urlInput)
+  if (!match) {
+    return null
+  }
+
+  return {
+    protocolPrefix: match[1],
+    hostname: match[2],
+    rest: match[3],
+  }
+}
+
+/**
+ * We need this to replace `*` with a placeholder in the hostname so that the URL can be parsed by the URL() constructor.
+ */
+export function normalizeWildcardHostname(urlInput: string, urlParts: UrlParts | null): string {
+  if (!urlParts?.hostname.startsWith('*')) {
+    return urlInput
+  }
+  const wildcardHostname = `${WILDCARD_HOSTNAME_PLACEHOLDER}${urlParts.hostname.slice(1)}`
+  return `${urlParts.protocolPrefix}${wildcardHostname}${urlParts.rest}`
+}
+
+function routeSpecificity(hostname: string, pathname: string) {
   // Adapted from internal config service routing table implementation
-  const hostParts = url.host.split('.')
+  const hostParts = hostname.split('.')
   let hostScore = hostParts.length
   if (hostParts[0] === '*') {
     hostScore -= 2
   }
 
-  const pathParts = url.pathname.split('/')
+  const pathParts = pathname.split('/')
   let pathScore = pathParts.length
   if (pathParts[pathParts.length - 1] === '*') {
     pathScore -= 2
@@ -47,32 +88,45 @@ export function parseRoutes<Metadata>(
   for (const rawRoute of allRoutes) {
     const route = typeof rawRoute === 'string' ? rawRoute : rawRoute.url
     const metadata = typeof rawRoute === 'string' ? undefined : rawRoute.metadata
-    const hasProtocol = /^[a-z0-9+\-.]+:\/\//i.test(route)
+    const hasProtocol = route.indexOf(PROTOCOL_SEPARATOR) > 0
 
     let urlInput = route
     // If route is missing a protocol, give it one so it parses
     if (!hasProtocol) {
       urlInput = `https://${urlInput}`
     }
-    const url = parsePatternUrl(urlInput)
+    const urlParts = splitUrlInput(urlInput)
+    const rawHostname = urlParts?.hostname ?? ''
+    const urlInputForParse = normalizeWildcardHostname(urlInput, urlParts)
+    const url = parsePatternUrl(urlInputForParse)
 
+    if (!urlParts?.hostname) {
+      throw new InvalidPatternError(`Route "${route}" is missing a hostname. This is not allowed.`, 'ERR_INVALID_URL')
+    }
     let protocol: Protocol | undefined
     if (hasProtocol) {
       validateProtocol(url.protocol)
       protocol = url.protocol
     }
 
-    const specificity = sortBySpecificity ? routeSpecificity(url) : undefined
+    const anyHostname = rawHostname === '*'
+    const specificity = sortBySpecificity ? routeSpecificity(rawHostname, url.pathname) : undefined
+    let hostname = url.hostname
 
-    const allowHostnamePrefix = url.hostname.startsWith('*')
-    const anyHostname = url.hostname === '*'
-    if (allowHostnamePrefix && !anyHostname) {
-      // Remove leading "*"
-      url.hostname = url.hostname.substring(1)
+    const hasWildcardHostnamePrefix = rawHostname.startsWith('*')
+    if (hasWildcardHostnamePrefix && !anyHostname) {
+      hostname = hostname.substring(WILDCARD_HOSTNAME_PLACEHOLDER.length)
     }
 
-    const allowPathSuffix = url.pathname.endsWith('*')
-    if (allowPathSuffix) {
+    const hasWildcardPathSuffix = url.pathname.endsWith('*')
+    const pathContainsWildcard = url.pathname.includes('*')
+    const hostnameHasInfixWildcard = hasWildcardHostnamePrefix
+      ? rawHostname.slice(1).includes('*')
+      : rawHostname.includes('*')
+    const pathHasInfixWildcard =
+      pathContainsWildcard && (!hasWildcardPathSuffix || url.pathname.slice(0, -1).includes('*'))
+
+    if (hasWildcardPathSuffix) {
       // Remove trailing "*"
       url.pathname = url.pathname.substring(0, url.pathname.length - 1)
     }
@@ -83,7 +137,7 @@ export function parseRoutes<Metadata>(
         'ERR_QUERY_STRING'
       )
     }
-    if (url.toString().includes('*') && !anyHostname) {
+    if (hostnameHasInfixWildcard || pathHasInfixWildcard) {
       throw new InvalidPatternError(
         `Route "${route}" contains an infix wildcard. This is not allowed.`,
         'ERR_INFIX_WILDCARD'
@@ -95,10 +149,10 @@ export function parseRoutes<Metadata>(
       metadata,
       specificity,
       protocol,
-      wildcardHostnamePrefix: allowHostnamePrefix,
-      hostname: anyHostname ? '' : url.hostname,
+      wildcardHostnamePrefix: hasWildcardHostnamePrefix,
+      hostname: anyHostname ? '' : hostname,
       path: url.pathname,
-      wildcardPathSuffix: allowPathSuffix,
+      wildcardPathSuffix: hasWildcardPathSuffix,
     })
   }
 

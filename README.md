@@ -221,6 +221,25 @@ try {
 }
 ```
 
+## Testing
+
+Unit tests:
+
+```sh
+pnpm test
+```
+
+Playwright tests:
+
+```sh
+pnpm exec playwright install chromium
+pnpm test:playwright
+```
+
+Playwright tests are required to test scenarions where browser behaves differently from Node.
+For example, the browser `URL()` constructor cannot parse wildcards like `*.example.com` correctly, but Node tests 
+wouldn't catch it.
+
 ## API Reference
 
 See the full [generated API reference](https://fingerprintjs.github.io/url-matcher/).

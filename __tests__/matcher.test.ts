@@ -3,6 +3,10 @@ import { cloudflareMatchUrl } from './cloudflare'
 import { findMatchingRoute, InvalidPatternError, InvalidProtocolError, matchesPatterns, parseRoutes } from '../src'
 
 describe('Matcher', () => {
+  it('should work for patterns starting with a wildcard', () => {
+    expect(matchesPatterns(new URL('https://sub.example.com'), ['*.example.com'])).toBe(true)
+  })
+
   // Based on miniflare behaviour
   it('should throw for an infix wildcard', () => {
     expect(() =>
@@ -14,7 +18,14 @@ describe('Matcher', () => {
       )
     )
   })
-
+  it('should throw for an infix wildcard and a wildcard host', () => {
+    expect(() => matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['*/blog/*/post-*'])).toThrow(
+      new InvalidPatternError(
+        'Route "*/blog/*/post-*" contains an infix wildcard. This is not allowed.',
+        'ERR_INFIX_WILDCARD'
+      )
+    )
+  })
   it('should throw if pattern contains query string', () => {
     expect(() =>
       matchesPatterns(new URL('https://example.com/blog/2025/post-1'), ['fingerprint.com/blog/post123?q=test'])
@@ -44,6 +55,23 @@ describe('Matcher', () => {
     )
   })
 
+  it('should throw for just a path as the pattern', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['/path'])).toThrow(
+      new InvalidPatternError('Route "/path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
+    )
+  })
+
+  it('should throw for a missing hostname', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['https:///path'])).toThrow(
+      new InvalidPatternError('Route "https:///path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
+    )
+  })
+
+  it('should throw for just a protocol', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['https://'])).toThrow(
+      new InvalidPatternError('Pattern https:// is not a valid URL', 'ERR_INVALID_URL')
+    )
+  })
   it('should return metadata of the matched route if it was set', () => {
     const routes = parseRoutes([
       {
