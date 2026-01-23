@@ -2,6 +2,8 @@ import { test, expect, Page } from '@playwright/test'
 import { resolve } from 'node:path'
 import { readFile } from 'node:fs/promises'
 
+// Expecially importart to test `*` handling in the browser context
+// instead of node unit tests since URL() behavior differs.
 test('matches wildcard subdomain with full path in browser context', async ({ page }) => {
   await runMatcherTest(page, {
     url: 'https://specific-subdomain.example.test/path',
@@ -31,6 +33,16 @@ test('does not match when path differs in browser context', async ({ page }) => 
     url: 'https://subdomain.example.test/different-path',
     patterns: ['*.example.test/some-path'],
     expected: false,
+  })
+})
+
+// But also just run all test cases also with Playwright, just in case.
+import testCases from '../testCases.json'
+testCases.forEach((testCase, index) => {
+  test(`#${index + 1} ${testCase.expected ? 'matches' : 'does not match'} for ${testCase.url} with ${testCase.patterns.join(',')}`, async ({
+    page,
+  }) => {
+    await runMatcherTest(page, testCase)
   })
 })
 
