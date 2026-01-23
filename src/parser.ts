@@ -111,7 +111,7 @@ export function parseRoutes<Metadata>(
 
     const allowHostnamePrefix = rawHostname.startsWith('*')
     const anyHostname = rawHostname === '*'
-    const allowPathSuffix = url.pathname.endsWith('*')
+    const hasWildcardPathSuffix = url.pathname.endsWith('*')
     const specificity = sortBySpecificity ? routeSpecificity(rawHostname, url.pathname) : undefined
 
     let hostname = url.hostname
@@ -123,9 +123,10 @@ export function parseRoutes<Metadata>(
     const hostnameHasInfixWildcard = allowHostnamePrefix
       ? rawHostname.slice(1).includes('*')
       : rawHostname.includes('*')
-    const pathHasInfixWildcard = pathContainsWildcard && (!allowPathSuffix || url.pathname.slice(0, -1).includes('*'))
+    const pathHasInfixWildcard =
+      pathContainsWildcard && (!hasWildcardPathSuffix || url.pathname.slice(0, -1).includes('*'))
 
-    if (allowPathSuffix) {
+    if (hasWildcardPathSuffix) {
       // Remove trailing "*"
       url.pathname = url.pathname.substring(0, url.pathname.length - 1)
     }
@@ -151,7 +152,7 @@ export function parseRoutes<Metadata>(
       wildcardHostnamePrefix: allowHostnamePrefix,
       hostname: anyHostname ? '' : hostname,
       path: url.pathname,
-      wildcardPathSuffix: allowPathSuffix,
+      wildcardPathSuffix: hasWildcardPathSuffix,
     })
   }
 
