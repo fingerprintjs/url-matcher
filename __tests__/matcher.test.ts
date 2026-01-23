@@ -60,8 +60,8 @@ describe('Matcher', () => {
       new InvalidPatternError('Route "/path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
     )
   })
-  
-    it('should throw for a missing hostname', () => {
+
+  it('should throw for a missing hostname', () => {
     expect(() => matchesPatterns(new URL('https://example.com'), ['https:///path'])).toThrow(
       new InvalidPatternError('Route "https:///path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
     )
