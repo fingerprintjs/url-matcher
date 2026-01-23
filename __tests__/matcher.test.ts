@@ -55,6 +55,23 @@ describe('Matcher', () => {
     )
   })
 
+  it('should throw for just a path as the pattern', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['/path'])).toThrow(
+      new InvalidPatternError('Route "/path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
+    )
+  })
+  
+    it('should throw for a missing hostname', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['https:///path'])).toThrow(
+      new InvalidPatternError('Route "https:///path" is missing a hostname. This is not allowed.', 'ERR_INVALID_URL')
+    )
+  })
+
+  it('should throw for just a protocol', () => {
+    expect(() => matchesPatterns(new URL('https://example.com'), ['https://'])).toThrow(
+      new InvalidPatternError('Pattern https:// is not a valid URL', 'ERR_INVALID_URL')
+    )
+  })
   it('should return metadata of the matched route if it was set', () => {
     const routes = parseRoutes([
       {
