@@ -4,7 +4,6 @@ import { InvalidPatternError } from './errors'
 
 const WILDCARD_HOSTNAME_PLACEHOLDER = 'wildcard'
 const PROTOCOL_SEPARATOR = '://'
-const PROTOCOL_PATTERN = /^[a-z0-9+\-.]+$/i
 
 export type UrlParts = {
   protocolPrefix: string
@@ -12,31 +11,24 @@ export type UrlParts = {
   rest: string
 }
 
+// (protocol)://(hostname)(rest including path, query, fragment)
+const URL_PARTS_PATTERN = /^([a-z0-9+\-.]+:\/\/)([^/]*)(.*)$/i
+
 /**
  * The reason we require manually parsing URLs instead of just passing it to URL()
  * is that URL() constructor in the browser cannot handle parsing wildcards like `*.example.com`.
  * Which is not obvious, since new URL('*.example.com') works in Node.
  */
 export function splitUrlInput(urlInput: string): UrlParts | null {
-  const protocolIndex = urlInput.indexOf(PROTOCOL_SEPARATOR)
-  if (protocolIndex <= 0) {
-    // Fully qualified URLs (including protocol) are expected
+  const match = URL_PARTS_PATTERN.exec(urlInput)
+  if (!match) {
     return null
   }
-
-  const protocol = urlInput.slice(0, protocolIndex)
-  if (!PROTOCOL_PATTERN.test(protocol)) {
-    return null
-  }
-
-  const hostnameStart = protocolIndex + PROTOCOL_SEPARATOR.length
-  const pathStart = urlInput.indexOf('/', hostnameStart)
-  const hostnameEnd = pathStart === -1 ? urlInput.length : pathStart
 
   return {
-    protocolPrefix: urlInput.slice(0, hostnameStart),
-    hostname: urlInput.slice(hostnameStart, hostnameEnd),
-    rest: urlInput.slice(hostnameEnd),
+    protocolPrefix: match[1],
+    hostname: match[2],
+    rest: match[3],
   }
 }
 
