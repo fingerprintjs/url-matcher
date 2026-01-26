@@ -22,8 +22,7 @@ jobs:
       language: node
       language-version: 21
       prepare-command: pnpm build
+      useTrustedPublishing: true
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-      # Use OIDC for npm authentication instead of NPM_TOKEN by passing empty string
-      NPM_AUTH_TOKEN: '' # https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
       RUNNER_APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }} 
