@@ -30,7 +30,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "provenance": true
   },
   "lint-staged": {
     "*.{js,ts}": "pnpm run lint:fix"
